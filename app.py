@@ -108,7 +108,7 @@ def play_blackjack():
             print("Dealer wins!")
         return
 
-    # # Dealer's turn
+    # Dealer's turn
     show_hand(dealer_hand, "Dealer", hide_second_card=True)
 
     # Player's turn
@@ -122,7 +122,7 @@ def play_blackjack():
         elif action == "s":
             break
 
-    # # Dealer's turn
+    # Dealer's turn
     show_hand(dealer_hand, "Dealer")
     while calculate_hand_value(dealer_hand) < 17:
         dealer_hand.append(deck.pop())
