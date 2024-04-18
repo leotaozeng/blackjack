@@ -103,9 +103,9 @@ def play_blackjack():
         print()
         show_hand(dealer_hand, "Dealer")
         if has_blackjack(player_hand):
-            print("Player also has Blackjack! It's a tie!")
+            print("Player also has Blackjack! It's a push!")
         else:
-            print("Dealer won!")
+            print("Dealer wins!")
         return
 
     # # Dealer's turn
@@ -115,6 +115,7 @@ def play_blackjack():
     show_hand(player_hand, "Player")
     while calculate_hand_value(player_hand) < 21:
         action = input("Do you want to hit or stand? (h/s): ").lower()
+        print()
         if action == "h":
             player_hand.append(deck.pop())
             show_hand(player_hand, "Player")
@@ -122,7 +123,29 @@ def play_blackjack():
             break
 
     # # Dealer's turn
-    # show_hand(dealer_hand, "Dealer")
+    show_hand(dealer_hand, "Dealer")
+    while calculate_hand_value(dealer_hand) < 17:
+        dealer_hand.append(deck.pop())
+        show_hand(dealer_hand, "Dealer")
+
+    # Determine the winner
+    player_total = calculate_hand_value(player_hand)
+    dealer_total = calculate_hand_value(dealer_hand)
+
+    print("Player's total value:", player_total)
+    print("Dealer's total value:", dealer_total)
+    print()
+
+    if player_total > 21:
+        print("Player busts! Dealer wins.")
+    elif dealer_total > 21:
+        print("Dealer busts! Player wins.")
+    elif player_total == dealer_total:
+        print("It's a push!")
+    elif player_total > dealer_total:
+        print("Player wins!")
+    else:
+        print("Dealer wins!")
 
 
 def main():
