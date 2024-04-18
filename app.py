@@ -46,7 +46,6 @@ values = {
 }
 
 
-# Create and shuffle a deck of cards
 def create_deck():
     deck = []
     for suit in suits:
@@ -92,22 +91,38 @@ def show_hand(hand, player_name, hide_second_card=False):
     print()
 
 
+def check_for_blackjack(dealer_hand, player_hand):
+    result = None
+
+    if has_blackjack(dealer_hand) and has_blackjack(player_hand):
+        result = "push"
+    elif has_blackjack(dealer_hand):
+        result = "dealer"
+    elif has_blackjack(player_hand):
+        result = "player"
+
+    if result:
+        show_hand(dealer_hand, "Dealer")
+        show_hand(player_hand, "Player")
+        if result == "push":
+            print("Both player and dealer have blackjack. It's a push!")
+        elif result == "dealer":
+            print("Dealer has blackjack! Dealer wins!")
+        elif result == "player":
+            print("Player has blackjack! Player wins!")
+    return result
+
+
 def play_blackjack():
     deck = create_deck()
     player_hand = [deck.pop(), deck.pop()]
     dealer_hand = [deck.pop(), deck.pop()]
 
-    # Check if the dealer's visible card is an Ace and the other card is a 10-value card
-    if has_blackjack(dealer_hand):
-        print("Dealer has Blackjack!")
-        print()
-        show_hand(dealer_hand, "Dealer")
-        if has_blackjack(player_hand):
-            print("Player also has Blackjack! It's a push!")
-        else:
-            print("Dealer wins!")
+    # Check for blackjack
+    if check_for_blackjack(dealer_hand, player_hand) != None:
         return
 
+    # If no one has blackjack, continue the game
     # Dealer's turn
     show_hand(dealer_hand, "Dealer", hide_second_card=True)
 
