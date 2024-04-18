@@ -1,13 +1,14 @@
+# Introduction:
 # Blackjack, also known as 21, is a card game where players try to get a card total as close to 21 as possible without going over.
-# The dealer and the player are both dealt two cards initially, with one of the dealer's cards facing down. Players then choose to "hit" (take another card) or "stand" (keep their current total), aiming to beat the dealer's hand.
+# The dealer and the player are both dealt two cards initially, with one of the dealer's cards facing down.
+# Players then choose to "hit" (take another card) or "stand" (keep their current total), aiming to beat the dealer's hand.
 
 # Here's a basic outline of what we'll do:
-
-# Setup the Deck: We'll create a standard deck of 52 cards.
-# Deal Cards: Both the dealer and the player will be dealt two cards at the beginning.
-# Player's Turn: The player can choose to hit or stand.
-# Dealer's Turn: The dealer must hit if their total is below 17.
-# Determine the Winner: Compare the hands to see who wins.
+# 1. Setup the Deck: We'll create a standard deck of 52 cards.
+# 2. Deal Cards: Both the dealer and the player will be dealt two cards at the beginning.
+# 3. Player's Turn: The player can choose to hit or stand.
+# 4. Dealer's Turn: The dealer must hit if their total is below 17.
+# 5. Determine the Winner: Compare the hands to see who wins.
 
 import random
 
@@ -45,13 +46,18 @@ def calculate_hand_value(hand):
     total = 0
 
 
+# Check if a player has blackjack (21)
 def has_blackjack(hand):
     return calculate_hand_value(hand) == 21
 
 
 def play_blackjack():
     deck = create_deck()
-    print(len(deck))
+    player_hand = [deck.pop(), deck.pop()]
+    dealer_hand = [deck.pop(), deck.pop()]
+
+    print("player_hand:", player_hand)
+    print("dealer_hand:", dealer_hand)
 
 
 def main():
