@@ -56,20 +56,6 @@ def create_deck():
     return deck
 
 
-def show_hand(hand, player_name, hide_second_card=False):
-    print(f"{player_name}'s hand:")
-    for i, card in enumerate(hand):
-        if i == 1 and hide_second_card:
-            print("2. Hidden Card")
-        else:
-            print(f"{i + 1}. {values[card[0]]} of {card[1]}")
-    if hide_second_card:
-        print(f"Total value: {values[hand[0][0]]} + ?")
-    else:
-        print(f"Total value: {calculate_hand_value(hand)}")
-    print("")
-
-
 def has_blackjack(hand):
     return calculate_hand_value(hand) == 21
 
@@ -92,12 +78,37 @@ def calculate_hand_value(hand):
     return total
 
 
+def show_hand(hand, player_name, hide_second_card=False):
+    print(f"{player_name}'s hand:")
+    for i, card in enumerate(hand):
+        if i == 1 and hide_second_card:
+            print("2. Hidden Card")
+        else:
+            print(f"{i + 1}. {card[0]}({values[card[0]]}) of {card[1]}")
+    if hide_second_card:
+        print(f"Total value: {values[hand[0][0]]} + ?")
+    else:
+        print(f"Total value: {calculate_hand_value(hand)}")
+    print()
+
+
 def play_blackjack():
     deck = create_deck()
     player_hand = [deck.pop(), deck.pop()]
     dealer_hand = [deck.pop(), deck.pop()]
 
-    # Dealer's turn
+    # Check if the dealer's visible card is an Ace and the other card is a 10-value card
+    if has_blackjack(dealer_hand):
+        print("Dealer has Blackjack!")
+        print()
+        show_hand(dealer_hand, "Dealer")
+        if has_blackjack(player_hand):
+            print("Player also has Blackjack! It's a tie!")
+        else:
+            print("Dealer won!")
+        return
+
+    # # Dealer's turn
     show_hand(dealer_hand, "Dealer", hide_second_card=True)
 
     # Player's turn
