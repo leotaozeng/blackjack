@@ -29,6 +29,21 @@ ranks = (
     "King",
     "Ace",
 )
+values = {
+    "Two": 2,
+    "Three": 3,
+    "Four": 4,
+    "Five": 5,
+    "Six": 6,
+    "Seven": 7,
+    "Eight": 8,
+    "Nine": 9,
+    "Ten": 10,
+    "Jack": 10,
+    "Queen": 10,
+    "King": 10,
+    "Ace": 11,
+}
 
 
 # Create and shuffle a deck of cards
@@ -41,14 +56,40 @@ def create_deck():
     return deck
 
 
-# Calculate the value of a hand
-def calculate_hand_value(hand):
-    total = 0
+def show_hand(hand, player_name, hide_second_card=False):
+    print(f"{player_name}'s hand:")
+    for i, card in enumerate(hand):
+        if i == 1 and hide_second_card:
+            print("2. Hidden Card")
+        else:
+            print(f"{i + 1}. {values[card[0]]} of {card[1]}")
+    if hide_second_card:
+        print(f"Total value: {values[hand[0][0]]} + ?")
+    else:
+        print(f"Total value: {calculate_hand_value(hand)}")
+    print("")
 
 
-# Check if a player has blackjack (21)
 def has_blackjack(hand):
     return calculate_hand_value(hand) == 21
+
+
+def calculate_hand_value(hand):
+    total = 0
+    num_aces = 0
+
+    for card in hand:
+        rank = card[0]
+        total += values[rank]
+        if rank == "Ace":
+            num_aces += 1
+
+    # Adjust ace value from 11 to 1 if necessary (11 + 11 = 22)
+    while total > 21 and num_aces:
+        total -= 10
+        num_aces -= 1
+
+    return total
 
 
 def play_blackjack():
@@ -56,8 +97,21 @@ def play_blackjack():
     player_hand = [deck.pop(), deck.pop()]
     dealer_hand = [deck.pop(), deck.pop()]
 
-    print("player_hand:", player_hand)
-    print("dealer_hand:", dealer_hand)
+    # Dealer's turn
+    show_hand(dealer_hand, "Dealer", hide_second_card=True)
+
+    # Player's turn
+    show_hand(player_hand, "Player")
+    while calculate_hand_value(player_hand) < 21:
+        action = input("Do you want to hit or stand? (h/s): ").lower()
+        if action == "h":
+            player_hand.append(deck.pop())
+            show_hand(player_hand, "Player")
+        elif action == "s":
+            break
+
+    # # Dealer's turn
+    # show_hand(dealer_hand, "Dealer")
 
 
 def main():
