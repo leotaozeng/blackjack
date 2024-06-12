@@ -1,5 +1,7 @@
 # Blackjack
 
+![Standard Deck of Cards](https://github.com/leotaozeng/blackjack/blob/main/standard-deck-of-cards.png)
+
 ## Project Objectives
 
 - Build a terminal program using Python
