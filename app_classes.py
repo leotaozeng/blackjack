@@ -56,6 +56,7 @@ def create_deck():
     return deck
 
 
+# 计算手牌总值
 def calculate_hand_value(hand):
     total = 0
     num_aces = 0
@@ -76,6 +77,20 @@ def calculate_hand_value(hand):
 
 def has_blackjack(hand):
     return calculate_hand_value(hand) == 21
+
+
+def display_hand(hand, player_name, hide_second_card=False):
+    print(f"{player_name}'s hand:")
+    for count, card in enumerate(hand):
+        if count == 1 and hide_second_card:
+            print("Hidden Card")
+        else:
+            print(f"{count + 1}. {card[0]}({values[card[0]]}) of {card[1]}")
+    if hide_second_card:
+        print(f"Total value: {hand[0][0]}({values[card[0]]}) + ?")
+    else:
+        print(f"Total value: {calculate_hand_value(hand)}")
+    print()
 
 
 class BlackjackGame:
@@ -106,10 +121,32 @@ class BlackjackGame:
     # 进行一轮游戏
     def play_round(self):
         player_hand, dealer_hand = self.deal_initial_hands()
-        print(f"player_hand: {player_hand}")
-        print(f"dealer_hand: {dealer_hand}")
         blackjack_result = self.check_for_blackjack(player_hand, dealer_hand)
-        print(f"blackjack result: {blackjack_result}")
+        if blackjack_result:
+            display_hand(player_hand, "Player")
+            display_hand(dealer_hand, "Dealer")
+            if blackjack_result == "tie":
+                print("Both player and dealer have blackjack. It's a tie!")
+            elif blackjack_result == "player":
+                print("Player has blackjack! Player wins!")
+            elif blackjack_result == "dealer":
+                print("Dealer has blackjack! Dealer wins!")
+            return
+
+        display_hand(dealer_hand, "Dealer", True)
+
+        # Player's turn 玩家回合
+        display_hand(player_hand, "Player")
+        while calculate_hand_value(player_hand) < 21:
+            action = input("Do you want to hit or stand? (h/s): ").low()
+            if action == "h":
+                player_hand.append(self.pop_card())
+                display_hand(player_hand, "Player")
+            elif action == "s":
+                break
+
+        # Dealer's turn 庄家回合
+        display_hand(dealer_hand, "Dealer")
 
 
 # Main function to start the game

@@ -119,7 +119,7 @@ def play_blackjack():
     dealer_hand = [deck.pop(), deck.pop()]
 
     # Check for blackjack
-    if check_for_blackjack(dealer_hand, player_hand) != None:
+    if check_for_blackjack(dealer_hand, player_hand) is not None:
         return
 
     # If no one has blackjack, continue the game
