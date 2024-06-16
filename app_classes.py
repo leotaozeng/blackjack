@@ -49,6 +49,7 @@ values = {
 
 
 # a standard Deck means a pack of 52 unique playing cards
+# 创建一副标准扑克牌并洗牌
 def create_deck():
     deck = []
     for suit in suits:
@@ -100,7 +101,7 @@ def has_blackjack(hand):
 
 class BlackjackGame:
     def __init__(self):
-        self.deck = create_deck()  # 创建并洗牌
+        self.deck = create_deck()  # 创建并洗牌 | Create and shuffle the deck
 
     # 抽牌
     def pop_card(self):
