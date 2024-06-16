@@ -38,7 +38,10 @@ values = {
     "Seven": 7,
     "Eight": 8,
     "Nine": 9,
-    ("Ten", "Jack", "Queen", "King"): 10,
+    "Ten": 10,
+    "Jack": 10,
+    "Queen": 10,
+    "King": 10,
     "Ace": 11,
 }
 
@@ -48,16 +51,72 @@ def create_deck():
     deck = []
     for suit in suits:
         for rank in ranks:
-            deck.append((suit, rank))
+            deck.append((rank, suit))
     random.shuffle(deck)
     return deck
 
 
-create_deck()
+def calculate_hand_value(hand):
+    total = 0
+    num_aces = 0
+
+    for card in hand:
+        rank = card[0]
+        total += values[rank]
+        if rank == "Ace":
+            num_aces += 1
+
+    # In Blackjack, Aces can be worth either 1 or 11 points.
+    # 如果总值超过 21，则将 Ace 的值从 11 改为 1
+    if total > 21 and num_aces:
+        total -= 10
+        num_aces -= 1
+    return total
+
+
+def has_blackjack(hand):
+    return calculate_hand_value(hand) == 21
 
 
 class BlackjackGame:
-    pass
+    def __init__(self):
+        self.deck = create_deck()  # 创建并洗牌
+
+    # 抽牌
+    def pop_card(self):
+        return self.deck.pop()
+
+    # 发放初始手牌
+    def deal_initial_hands(self):
+        player_hand = [self.pop_card(), self.pop_card()]
+        dealer_hand = [self.pop_card(), self.pop_card()]
+        return player_hand, dealer_hand
+
+    # 检查
+    def check_for_blackjack(self, player_hand, dealer_hand):
+        result = None
+        if has_blackjack(player_hand) and has_blackjack(dealer_hand):
+            result = "tie"
+        elif has_blackjack(dealer_hand):
+            result = "dealer"
+        elif has_blackjack(player_hand):
+            result = "player"
+        return result
+
+    # 进行一轮游戏
+    def play_round(self):
+        player_hand, dealer_hand = self.deal_initial_hands()
+        print(f"player_hand: {player_hand}")
+        print(f"dealer_hand: {dealer_hand}")
+        blackjack_result = self.check_for_blackjack(player_hand, dealer_hand)
+        print(f"blackjack result: {blackjack_result}")
 
 
-game = BlackjackGame()
+# Main function to start the game
+def main():
+    game = BlackjackGame()
+    game.play_round()
+
+
+if __name__ == "__main__":
+    main()
