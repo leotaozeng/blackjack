@@ -2,18 +2,19 @@
 # Blackjack, also known as 21, is a card game where players try to get a card total as close to 21 as possible without going over.
 # The dealer and the player are both dealt two cards initially, with one of the dealer's cards facing down.
 # Players then choose to "hit" (take another card) or "stand" (keep their current total), aiming to beat the dealer's hand.
+# Playing cards - 扑克牌
 
-# Here's a basic outline of what we'll do:
-# 1. Setup the Deck: We'll create a standard deck of 52 cards.
-# 2. Deal Cards: Both the dealer and the player will be dealt two cards at the beginning.
-# 3. Player's Turn: The player can choose to hit or stand.
-# 4. Dealer's Turn: The dealer must hit if their total is below 17.
-# 5. Determine the Winner: Compare the hands to see who wins.
+# * Here's a basic outline of what we'll do:
+# * 1. Setup the Deck: We'll create a standard deck of 52 cards.
+# * 2. Deal Cards: Both the dealer and the player will be dealt two cards at the beginning.
+# * 3. Player's Turn: The player can choose to hit or stand.
+# * 4. Dealer's Turn: The dealer must hit if their total is below 17.
+# * 5. Determine the Winner: Compare the hands to see who wins.
 
 import random
 
 
-suits = ["Clubs", "Spades", "Hearts", "Diamonds"]
+suits = ["Clubs", "Spades", "Hearts", "Diamonds"]  # 花色
 ranks = [
     "Two",
     "Three",
@@ -28,7 +29,7 @@ ranks = [
     "Queen",
     "King",
     "Ace",
-]
+]  # 等级
 values = {
     "Two": 2,
     "Three": 3,
@@ -43,7 +44,7 @@ values = {
     "Queen": 10,
     "King": 10,
     "Ace": 11,
-}
+}  # 牌值
 
 
 # a standard Deck means a pack of 52 unique playing cards
@@ -81,13 +82,15 @@ def has_blackjack(hand):
 
 def display_hand(hand, player_name, hide_second_card=False):
     print(f"{player_name}'s hand:")
+
     for count, card in enumerate(hand):
         if count == 1 and hide_second_card:
-            print("Hidden Card")
+            print("2. Hidden Card")
         else:
             print(f"{count + 1}. {card[0]}({values[card[0]]}) of {card[1]}")
+
     if hide_second_card:
-        print(f"Total value: {hand[0][0]}({values[card[0]]}) + ?")
+        print(f"Total value: {hand[0][0]}({values[hand[0][0]]}) + ?")
     else:
         print(f"Total value: {calculate_hand_value(hand)}")
     print()
@@ -107,7 +110,6 @@ class BlackjackGame:
         dealer_hand = [self.pop_card(), self.pop_card()]
         return player_hand, dealer_hand
 
-    # 检查
     def check_for_blackjack(self, player_hand, dealer_hand):
         result = None
         if has_blackjack(player_hand) and has_blackjack(dealer_hand):
@@ -131,14 +133,16 @@ class BlackjackGame:
                 print("Player has blackjack! Player wins!")
             elif blackjack_result == "dealer":
                 print("Dealer has blackjack! Dealer wins!")
+            print()
             return
 
+        # 展示庄家的第一张牌/隐藏庄家的第二张牌
         display_hand(dealer_hand, "Dealer", True)
 
         # Player's turn 玩家回合
         display_hand(player_hand, "Player")
         while calculate_hand_value(player_hand) < 21:
-            action = input("Do you want to hit or stand? (h/s): ").low()
+            action = input("Do you want to hit or stand? (h/s): ").lower()
             if action == "h":
                 player_hand.append(self.pop_card())
                 display_hand(player_hand, "Player")
@@ -147,12 +151,38 @@ class BlackjackGame:
 
         # Dealer's turn 庄家回合
         display_hand(dealer_hand, "Dealer")
+        while calculate_hand_value(dealer_hand) < 17:
+            dealer_hand.append(self.pop_card())
+            display_hand(dealer_hand, "Dealer")
+
+        player_total = calculate_hand_value(player_hand)
+        dealer_total = calculate_hand_value(dealer_hand)
+
+        print("Player's total value:", player_total)
+        print("Dealer's total value:", dealer_total)
+        print()
+
+        if player_total > 21:
+            print("Player busts! Dealer wins.")
+        elif dealer_total > 21:
+            print("Dealer busts! Player wins.")
+        elif player_total == dealer_total:
+            print("It's a tie!")
+        elif player_total > dealer_total:
+            print("Player wins!")
+        else:
+            print("Dealer wins!")
 
 
 # Main function to start the game
 def main():
-    game = BlackjackGame()
-    game.play_round()
+    print("Welcome to Blackjack!")
+    while True:
+        game = BlackjackGame()
+        game.play_round()
+        again = input("Do you want to play again? (y/n): ").lower()
+        if again != "y":
+            break
 
 
 if __name__ == "__main__":
